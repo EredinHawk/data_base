@@ -115,5 +115,40 @@
 
 [docker-compose.yml](./docker-compose.yml)
 
-Основные сервисы файла:
+Docker compose позволяет разворачивать одновременно несколько контейнеров и организует связь между ними. Чтобы информация, которую мы будем вносить в БД, не была потеряна после перезапуска контейнера, вмонтируем Docker Volume:
 
+```bash
+volumes:
+  aviadb-data:  aviadb-data:/var/lib/postgresql/data
+  pgadmin-data: pgadmin-data:/var/lib/pgadmin
+```
+
+Теперь запустим контейнер в фоновом режиме и проверим работу:
+```bash
+docker-compose up -d
+```
+
+В строке браузера введем http://localhost:5050/browser/. Если все настроено правильно, то откроется Web клиент pgAdmin, с помощью которого и будет спроектирована база данных.
+
+![alt text](/img/pgAdmin.png)
+
+#### Что произошло?
+
+С помощью docker-compose был развернут контейнер data_base_container, внутри которого расположены два других контенера:
+
+    postgres_container - СУБД PostgreSQL
+    pgadmin_container  - Web клиент pgAdmin
+
+![alt text](/img/container.png)
+
+Проверим работоспособность БД и создадим тестовую таблицу:
+```bash
+CREATE TABLE TEST(
+	id		SERIAL,
+	name 	varchar(100)
+);
+```
+
+![alt text](/img/test_table.png)
+
+Работает! Приступим непосредственно к проектированию БД.

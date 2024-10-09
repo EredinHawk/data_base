@@ -155,3 +155,78 @@ CREATE TABLE TEST(
 ![alt text](/img/test_table.png)
 
 Работает! Приступим непосредственно к проектированию БД.
+
+### 4. Проектирование БД
+
+С использованием Web клиента pgAdmin определим таблицы в соответствии с диаграммой:
+
+#### Рейс
+
+```bash
+CREATE TABLE flight(
+f_id 			SERIAL 		NOT NULL,
+f_number 		VARCHAR(50) NOT NULL,
+f_airline_id 	INT 		NOT NULL,
+f_route			INT			NOT NULL,
+f_time 			TIMESTAMPTZ	NOT NULL,
+f_cost 			MONEY		NOT NULL,
+CONSTRAINT PK_flight PRIMARY KEY (f_id),
+FOREIGN KEY (f_route) REFERENCES route(r_id),
+FOREIGN KEY (f_airline_id) REFERENCES airline(al_id)
+);
+```
+
+#### Авиакомпания
+
+```bash
+CREATE TABLE airline(
+al_id 		SERIAL 		NOT NULL,
+al_name 	VARCHAR(50) NOT NULL,
+CONSTRAINT PK_airline PRIMARY KEY (al_id)
+);
+```
+
+#### Маршрут
+
+```bash
+CREATE TABLE route(
+r_id 				SERIAL 		NOT NULL,
+r_airport_depart 	INT			NOT NULL,
+r_airport_dest		INT 		NOT NULL,
+r_way				SMALLINT	NULL,
+CONSTRAINT PK_route PRIMARY KEY (r_id),
+FOREIGN KEY (r_airport_depart) REFERENCES airport(ap_id) ON DELETE SETNULL,
+FOREIGN KEY (r_airport_dest) REFERENCES airport(ap_id) ON DELETE SET NULL
+);
+```
+
+#### Аэропорт
+
+```bash
+CREATE TABLE airport(
+ap_id 		SERIAL 		NOT NULL,
+ap_name 	VARCHAR(50) NOT NULL,
+ap_city_id 	INT 		NOT NULL,
+CONSTRAINT PK_airport PRIMARY KEY (ap_id),
+FOREIGN KEY (ap_city_id) REFERENCES city(c_id) ON DELETE SET NULL
+);
+```
+
+#### Город
+
+```bash
+CREATE TABLE city(
+	c_id SERIAL NOT NULL,
+	c_name VARCHAR(100) NOT NULL,
+	c_time_zone INT NOT NULL,
+
+	CONSTRAINT PK_city PRIMARY KEY (c_id)
+);
+```
+
+В итоге получим схему, аналогичную UML-диаграмме. 
+
+![alt text](/img/БД_pgAdmin.png)
+
+Заполним таблицы минимальной информацией:
+

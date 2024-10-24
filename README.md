@@ -8,8 +8,7 @@
     2. Составить модель базы данных с использованием UML
     3. Развернуть локальный сервер PostgreSQL
     4. Спроектировать БД
-    5. Определить конечные точки API
-    6. Реализовать CRUD
+    5. Реализовать API
 
 ## Реализация
 
@@ -114,7 +113,7 @@
 
 Развернем локальный сервер PostgreSQL в Docker контейнере. Для этого воспользуемся надстройкой docker-compose и сформируем compose-file.
 
-[docker-compose.yml](./docker-compose.yml)
+[docker-compose.yml](./postgresql/docker-compose.yml)
 
 Docker Compose позволяет разворачивать одновременно несколько контейнеров и организовывать связь между ними. Чтобы информация, которую мы будем вносить в БД, не была потеряна после перезапуска контейнера, вмонтируем Docker Volume:
 
@@ -168,7 +167,7 @@ f_id 			SERIAL 		NOT NULL,
 f_number 		VARCHAR(50) NOT NULL,
 f_airline_id 	INT 		NOT NULL,
 f_route			INT			NOT NULL,
-f_time 			TIMESTAMPTZ	NOT NULL,
+f_time 			TIMESTAMP	NOT NULL,
 f_cost 			MONEY		NOT NULL,
 CONSTRAINT PK_flight PRIMARY KEY (f_id),
 FOREIGN KEY (f_route) REFERENCES route(r_id),
@@ -228,5 +227,21 @@ CREATE TABLE city(
 
 ![alt text](/img/БД_pgAdmin.png)
 
-Заполним таблицы минимальной информацией:
+БД будет заполнена синтетическими данными для наглядности.
 
+### Определение API
+
+На базе стандартной библиотеки языка Go реализуем API для поиска доступных авиабилетов.
+
+#### Вывод всех авиабилетов в БД
+
+Для начала реализуем ручку, которая будет выводить вообще все аварейсы, хранящиеся в БД
+
+```bash
+URL  - http://localhost:8090/flights
+Body - {
+            "city_depart"   : "(Оставить пустым)",
+            "city_dest"     : "(Оставить пустым)",
+            "time"          : "(Оставить пустым)"
+}
+```

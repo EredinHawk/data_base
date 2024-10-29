@@ -6,9 +6,9 @@ Search структура определяет параметры для пои�
 формирования SQL запросов.
 */
 type Search struct {
-	City_depart string `json:"city_depart" validate:"required`
-	City_dest   string `json:"city_dest" validate:"required`
-	Date        string `json:"date" validate:"required`
+	City_depart string `json:"city_depart" validate:"required"`
+	City_dest   string `json:"city_dest" validate:"required"`
+	Date        string `json:"date" validate:"required"`
 }
 
 // Flights структура определяет контейнер для результирующего набора данных sql запроса.

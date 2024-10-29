@@ -16,7 +16,7 @@ func GetFlights(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result, err := database.SendFlightsRequest(params)
+	result, err := database.GetFlightsRequest(params)
 	if err != nil {
 		http.Error(w, fmt.Sprintf(lib.QueryBDError, err), 400)
 		return
@@ -29,5 +29,8 @@ func GetFlights(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
+	if string(input) == "null"{
+		http.Error(w, "Авиарейсов с такими параметрами отстуствуют", 404)
+	}
 	fmt.Fprintf(w, string(input))
 }
